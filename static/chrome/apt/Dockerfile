@@ -10,6 +10,8 @@ RUN \
         curl -s https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
         echo 'deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google.list && \
         wget 'http://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_109.0.5414.119-1_amd64.deb' && \
+        apt-get update && \
+        apt-get -y --no-install-recommends install libatk-bridge2.0-0 libatk1.0-0 libatspi2.0-0 libcups2 libgbm1 libgtk-3-0 libgtk-4-1 libpango-1.0-0 libu2f-udev libxkbcommon0 xdg-utils && \
         dpkg -i ./google-chrome-stable_109.0.5414.119-1_amd64.deb && \
         apt-get update && \
         apt-get install -f && \
