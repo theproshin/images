@@ -10,7 +10,7 @@ RUN \
         curl -s https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
         echo 'deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google.list && \
         apt-get update && \
-        apt-get -y --no-install-recommends install iproute2 $PACKAGE=$VERSION && \
+        apt-get -y --no-install-recommends install /tmp/google-chrome-stable_109.0.5414.119-1_amd64.deb && \
         apt-get -y --no-install-recommends install xdotool && \
         sed -i -e 's@exec -a "$0" "$HERE/chrome"@& --no-sandbox --disable-gpu@' /opt/google/$INSTALL_DIR/google-chrome && \
         chown root:root /opt/google/$INSTALL_DIR/chrome-sandbox && \
