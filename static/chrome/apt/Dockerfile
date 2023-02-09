@@ -10,7 +10,7 @@ RUN \
         curl -s https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
         echo 'deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google.list && \
         wget 'http://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_109.0.5414.119-1_amd64.deb' && \
-        dpkg -i /home/sbis/tests/google-chrome-stable_109.0.5414.119-1_amd64.deb && \
+        dpkg -i ./google-chrome-stable_109.0.5414.119-1_amd64.deb && \
         apt-get update && \
         apt-get install -f && \
         dpkg -i && \
