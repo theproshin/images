@@ -14,7 +14,7 @@ RUN \
     ninja install && \
     rm -Rf /var/lib/apt/lists/*
 
-FROM golang:1.18 as go
+FROM golang:1.21-bullseye as go
 
 COPY cmd/prism /prism
 
@@ -26,7 +26,7 @@ RUN \
     upx /prism/prism && \
     rm -Rf /var/lib/apt/lists/*
 
-FROM browsers/base:7.4.1
+FROM browsers/base:7.4.2
 
 COPY --from=build /opt/webkit /opt/webkit
 COPY --from=go /prism/prism /usr/bin/
