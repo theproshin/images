@@ -19,7 +19,7 @@ COPY --from=go /devtools/devtools /usr/bin/
 COPY policies.json /etc/opt/chrome/policies/managed/
 COPY chromedriver /usr/bin/
 COPY entrypoint.sh /
-COPY ../fonts/* /usr/share/fonts/truetype
+COPY fonts/* /usr/share/fonts/truetype
 
 RUN \
     chmod +x /usr/bin/chromedriver && \
