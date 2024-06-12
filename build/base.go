@@ -21,7 +21,7 @@ import (
 )
 
 const (
-	LatestVersion = "latest"
+	LatestVersion = "24.04"
 )
 
 type Requirements struct {
