@@ -1,4 +1,4 @@
-FROM browsers/base:7.4.2
+FROM dev-image-store.tensor.ru/personal-ea.proshin/browsers/base:7.4.2
 
 ARG VERSION
 ARG PACKAGE=firefox
