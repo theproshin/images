@@ -8,12 +8,10 @@ LABEL browser=$PACKAGE:$VERSION
 
 RUN \
         apt-get update && \
-        apt-get install -y software-properties-common && \
-        rm -rf /var/lib/apt/lists/* && \
-        add-apt-repository 'deb https://packagecloud.io/dcommander/virtualgl/any/ any main' && \
         curl -s https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
         echo 'deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google.list && \
-        apt-get --allow-unauthenticated update && \
+        echo 'deb [trusted=yes] https://packagecloud.io/dcommander/virtualgl/any/ any main' > /etc/apt/sources.list.d/virtualgl.list && \
+        apt-get update && \
         apt-get -y --no-install-recommends install iproute2 $PACKAGE=$VERSION && \
         apt-get -y --no-install-recommends install xdotool && \
         apt-get -y --no-install-recommends install virtualgl && \
