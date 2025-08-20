@@ -7,6 +7,8 @@ ARG INSTALL_DIR=chrome
 LABEL browser=$PACKAGE:$VERSION
 
 RUN \
+        wget -q -O- https://packagecloud.io/dcommander/virtualgl/gpgkey | gpg --dearmor >/etc/apt/trusted.gpg.d/VirtualGL.gpg
+        wget -O /etc/apt/sources.list.d/VirtualGL.list https://raw.githubusercontent.com/VirtualGL/repo/main/VirtualGL.list
         apt-get update && \
         apt-get -y --no-install-recommends install gconf-service \
          libasound2 \
@@ -52,7 +54,8 @@ RUN \
          xdg-utils \
          libcurl4 \
          iproute2 \
-         curl && \
+         curl \
+         virtualgl && \
          curl -O http://host.docker.internal:8080/google-chrome.deb && \
          apt-get -y purge curl && \
          dpkg -i google-chrome.deb && \
