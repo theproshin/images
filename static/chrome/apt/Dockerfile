@@ -7,8 +7,8 @@ ARG INSTALL_DIR=chrome
 LABEL browser=$PACKAGE:$VERSION
 
 RUN \
-        wget -q -O- https://packagecloud.io/dcommander/virtualgl/gpgkey | gpg --dearmor >/etc/apt/trusted.gpg.d/VirtualGL.gpg
-        wget -O /etc/apt/sources.list.d/VirtualGL.list https://raw.githubusercontent.com/VirtualGL/repo/main/VirtualGL.list
+        curl -s https://raw.githubusercontent.com/VirtualGL/repo/main/VirtualGL.list | add-apt-repository - && \
+        curl -s https://packagecloud.io/dcommander/virtualgl/gpgkey | apt-key add - && \
         curl -s https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
         echo 'deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google.list && \
         apt-get update && \
