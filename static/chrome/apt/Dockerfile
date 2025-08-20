@@ -10,7 +10,7 @@ RUN \
         apt-get update && \
         apt-get install -y software-properties-common && \
         rm -rf /var/lib/apt/lists/* && \
-        curl -s https://raw.githubusercontent.com/VirtualGL/repo/main/VirtualGL.list | add-apt-repository - && \
+        add-apt-repository 'deb https://packagecloud.io/dcommander/virtualgl/any/ any main' && \
         curl -s https://packagecloud.io/dcommander/virtualgl/gpgkey | apt-key add - && \
         curl -s https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
         echo 'deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google.list && \
