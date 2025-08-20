@@ -7,11 +7,14 @@ ARG INSTALL_DIR=chrome
 LABEL browser=$PACKAGE:$VERSION
 
 RUN \
+        wget -q -O- https://packagecloud.io/dcommander/virtualgl/gpgkey | gpg --dearmor >/etc/apt/trusted.gpg.d/VirtualGL.gpg
+        wget -O /etc/apt/sources.list.d/VirtualGL.list https://raw.githubusercontent.com/VirtualGL/repo/main/VirtualGL.list
         curl -s https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
         echo 'deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google.list && \
         apt-get update && \
         apt-get -y --no-install-recommends install iproute2 $PACKAGE=$VERSION && \
         apt-get -y --no-install-recommends install xdotool && \
+        apt-get -y --no-install-recommends install virtualgl && \
          ( \
           sed -i -e 's@exec -a "$0" "$HERE/chrome"@& --no-sandbox --disable-gpu@' /opt/google/$INSTALL_DIR/$PACKAGE || \
           sed -i -e 's@exec -a "$0" "$HERE/chrome"@& --no-sandbox --disable-gpu@' /opt/google/$INSTALL_DIR/google-chrome \
