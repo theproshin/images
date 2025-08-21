@@ -77,7 +77,7 @@ pulseaudio --start --exit-idle-time=-1
 pactl load-module module-native-protocol-tcp
 PULSE_PID=$(ps --no-headers -C pulseaudio -o pid | sed -r 's/( )+//g')
 
-/usr/bin/xvfb-run -a vglrun -l -n "$DISPLAY_NUM" -s "-ac -screen 0 $SCREEN_RESOLUTION -noreset -listen tcp" /usr/bin/fluxbox -display "$DISPLAY" -log /dev/null 2>/dev/null &
+/usr/bin/xvfb-run -l -n "$DISPLAY_NUM" -s "-ac -screen 0 $SCREEN_RESOLUTION -noreset -listen tcp" vglrun /usr/bin/fluxbox -display "$DISPLAY" -log /dev/null 2>/dev/null &
 XVFB_PID=$!
 
 retcode=1
