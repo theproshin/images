@@ -91,7 +91,7 @@ until [ $retcode -eq 0 ]; do
 done
 
 if [ "$ENABLE_VNC" == "true" ]; then
-    x11vnc -display "$DISPLAY" -passwd selenoid -shared -forever -loop500 -rfbport 5900 -rfbportv6 5900 -logfile /dev/null &
+    x11vnc -display "$DISPLAY" -passwd selenoid -shared -forever -loop500 -rfbport 5900 -rfbportv6 5900 -logfile /tmp/x11vnc.log &
     X11VNC_PID=$!
 fi
 
