@@ -14,22 +14,22 @@ sed -i "s|@@DRIVER_ARGS@@|$DRIVER_ARGS|g" /tmp/browsers.json
 
 clean() {
   if [ -n "$FILESERVER_PID" ]; then
-    kill -TERM "$FILESERVER_PID"
+    kill -9 "$FILESERVER_PID"
   fi
   if [ -n "$XSELD_PID" ]; then
-    kill -TERM "$XSELD_PID"
+    kill -9 "$XSELD_PID"
   fi
   if [ -n "$PULSE_PID" ]; then
-    kill -TERM "$PULSE_PID"
+    kill -9 "$PULSE_PID"
   fi
   if [ -n "$XVFB_PID" ]; then
-    kill -TERM "$XVFB_PID"
+    kill -9 "$XVFB_PID"
   fi
   if [ -n "$SELENOID_PID" ]; then
-    kill -TERM "$SELENOID_PID"
+    kill -9 "$SELENOID_PID"
   fi
   if [ -n "$X11VNC_PID" ]; then
-    kill -TERM "$X11VNC_PID"
+    kill -9 "$X11VNC_PID"
   fi
   pkill -9 -f firefox || true
   pkill -9 -f geckodriver || true
