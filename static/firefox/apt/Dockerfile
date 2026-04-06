@@ -6,7 +6,20 @@ ARG PPA
 
 LABEL browser=$PACKAGE:$VERSION
 
-RUN mkdir -p /usr/lib/firefox/defaults/pref && \
+RUN  \
+        ( [ "$PPA" != "" ] && \
+            apt-get update && \
+            apt-get install -y software-properties-common && \
+            apt-get update && \
+            add-apt-repository -y $PPA \
+        ) || true && \
+        apt-get update && \
+        apt-get -y --no-install-recommends install iproute2 libavcodec60 $PACKAGE=$VERSION && \
+        ( [ "$PACKAGE" != "firefox" ] && ln /usr/bin/$PACKAGE /usr/bin/firefox ) || true && \
+        firefox --version && \
+        rm -Rf /tmp/* && rm -Rf /var/lib/apt/lists/*
+
+RUN mkdir -p /usr/lib/$PACKAGE/defaults/pref && \
 echo -e '\
 pref("app.normandy.enabled", false);\n\
 pref("app.normandy.api_url", "");\n\
@@ -20,17 +33,4 @@ pref("browser.newtabpage.activity-stream.feeds.section.topstories", false);\n\
 pref("browser.translations.enable", false);\n\
 pref("datareporting.healthreport.uploadEnabled", false);\n\
 pref("toolkit.telemetry.enabled", false);\
-' > /usr/lib/firefox/defaults/pref/disable-nimbus.js
-
-RUN  \
-        ( [ "$PPA" != "" ] && \
-            apt-get update && \
-            apt-get install -y software-properties-common && \
-            apt-get update && \
-            add-apt-repository -y $PPA \
-        ) || true && \
-        apt-get update && \
-        apt-get -y --no-install-recommends install iproute2 libavcodec60 $PACKAGE=$VERSION && \
-        ( [ "$PACKAGE" != "firefox" ] && ln /usr/bin/$PACKAGE /usr/bin/firefox ) || true && \
-        firefox --version && \
-        rm -Rf /tmp/* && rm -Rf /var/lib/apt/lists/*
+' > /usr/lib/$PACKAGE/defaults/pref/disable-nimbus.js
