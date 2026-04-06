@@ -3,14 +3,11 @@ SCREEN_RESOLUTION=${SCREEN_RESOLUTION:-"1920x1080x24"}
 DISPLAY_NUM=99
 export DISPLAY=":$DISPLAY_NUM"
 
-cp /home/selenium/browsers.json /tmp
-
 VERBOSE=${VERBOSE:-""}
 DRIVER_ARGS=${DRIVER_ARGS:-""}
 if [ -n "$VERBOSE" ]; then
-    DRIVER_ARGS="$DRIVER_ARGS, \"--log\", \"debug\""
+    DRIVER_ARGS="$DRIVER_ARGS --log debug"
 fi
-sed -i "s|@@DRIVER_ARGS@@|$DRIVER_ARGS|g" /tmp/browsers.json
 
 clean() {
   if [ -n "$FILESERVER_PID" ]; then
@@ -18,22 +15,18 @@ clean() {
   fi
   if [ -n "$XSELD_PID" ]; then
     kill -9 "$XSELD_PID"
-  fi
   if [ -n "$PULSE_PID" ]; then
     kill -9 "$PULSE_PID"
   fi
   if [ -n "$XVFB_PID" ]; then
     kill -9 "$XVFB_PID"
   fi
-  if [ -n "$SELENOID_PID" ]; then
-    kill -9 "$SELENOID_PID"
-  fi
   if [ -n "$X11VNC_PID" ]; then
     kill -9 "$X11VNC_PID"
   fi
-  pkill -9 -f firefox || true
-  pkill -9 -f geckodriver || true
-  kill -9 -1 || true
+  if [ -n "$DRIVER_PID" ]; then
+    kill -TERM "$DRIVER_PID" 2>/dev/null || true
+  fi
 }
 
 trap clean EXIT SIGINT SIGTERM
@@ -53,14 +46,9 @@ PULSE_PID=$(ps --no-headers -C pulseaudio -o pid | sed -r 's/( )+//g')
 /usr/bin/xvfb-run -l -n "$DISPLAY_NUM" -s "-ac -screen 0 $SCREEN_RESOLUTION -noreset -listen tcp" /usr/bin/fluxbox -display "$DISPLAY" -log /dev/null 2>/dev/null &
 XVFB_PID=$!
 
-retcode=1
-until [ $retcode -eq 0 ]; do
-  DISPLAY="$DISPLAY" wmctrl -m >/dev/null 2>&1
-  retcode=$?
-  if [ $retcode -ne 0 ]; then
-    echo Waiting X server...
-    sleep 0.1
-  fi
+until DISPLAY="$DISPLAY" wmctrl -m >/dev/null 2>&1; do
+  echo "Waiting X server..."
+  sleep 0.1
 done
 
 if [ "$ENABLE_VNC" == "true" ]; then
@@ -68,31 +56,7 @@ if [ "$ENABLE_VNC" == "true" ]; then
     X11VNC_PID=$!
 fi
 
-DISPLAY="$DISPLAY" /usr/bin/selenoid -conf /tmp/browsers.json -disable-docker -timeout 1h -max-timeout 24h -enable-file-upload -capture-driver-logs &
-SELENOID_PID=$!
+DISPLAY="$DISPLAY" /usr/bin/geckodriver --port=4444 ${DRIVER_ARGS} &
+DRIVER_PID=$!
 
-if env | grep -q ROOT_CA_; then
-  while true; do
-    if certDB=$(ls -d /tmp/rust_mozprofile*/cert9.db 2>/dev/null); then
-      break
-    else
-      sleep 0.1
-    fi
-  done
-  certdir=$(dirname ${certDB})
-  for e in $(env | grep ROOT_CA_ | sed -e 's/=.*$//'); do
-    certname=$(echo -n $e | sed -e 's/ROOT_CA_//')
-    echo ${!e} | base64 -d >/tmp/cert.pem
-    certutil -A -n ${certname} -t "TC,C,T" -i /tmp/cert.pem -d sql:${certdir}
-    if cat tmp/cert.pem | grep -q "PRIVATE KEY"; then
-      PRIVATE_KEY_PASS=${PRIVATE_KEY_PASS:-\'\'}
-      openssl pkcs12 -export -in /tmp/cert.pem -clcerts -nodes -out /tmp/key.p12 -passout pass:${PRIVATE_KEY_PASS}  -passin pass:${PRIVATE_KEY_PASS}
-      pk12util -d sql:${certdir} -i /tmp/key.p12 -W ${PRIVATE_KEY_PASS}
-      rm /tmp/key.p12
-    fi
-    rm /tmp/cert.pem
-  done
-fi
-
-wait -n
-clean
+wait
