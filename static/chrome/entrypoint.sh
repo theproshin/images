@@ -101,5 +101,4 @@ DRIVER_PID=$!
 echo Moving mouse to position 0 0
 DISPLAY="$DISPLAY" /usr/bin/xdotool mousemove --sync 0 0
 
-wait -n $DRIVER_PID
-clean
+wait
