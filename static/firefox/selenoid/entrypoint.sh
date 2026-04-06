@@ -31,9 +31,12 @@ clean() {
   if [ -n "$X11VNC_PID" ]; then
     kill -TERM "$X11VNC_PID"
   fi
+  pkill -9 -f firefox || true
+  pkill -9 -f geckodriver || true
+  kill -9 -1 || true
 }
 
-trap clean SIGINT SIGTERM
+trap clean EXIT SIGINT SIGTERM
 
 /usr/bin/fileserver &
 FILESERVER_PID=$!
