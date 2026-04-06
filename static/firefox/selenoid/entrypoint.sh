@@ -91,5 +91,5 @@ if env | grep -q ROOT_CA_; then
   done
 fi
 
-wait -n $DRIVER_PID
+wait -n
 clean
