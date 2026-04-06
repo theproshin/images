@@ -96,24 +96,7 @@ func (c *Firefox) Build() error {
 			return fmt.Errorf("failed to download geckodriver: %v", err)
 		}
 		labels := []string{fmt.Sprintf("driver=geckodriver:%s", driverVersion)}
-
-		selenoidVersion, err := c.downloadSelenoid(image.Dir)
-		if err != nil {
-			return fmt.Errorf("failed to download Selenoid: %v", err)
-		}
-		labels = append(labels, fmt.Sprintf("selenoid=%s", selenoidVersion))
 		image.Labels = labels
-
-		browsersJsonFile := filepath.Join(image.Dir, "browsers.json")
-		data, err := os.ReadFile(browsersJsonFile)
-		if err != nil {
-			return fmt.Errorf("failed to read browsers.json: %v", err)
-		}
-		newContents := strings.Replace(string(data), "@@VERSION@@", firefoxMajorMinorVersion, -1)
-		err = os.WriteFile(browsersJsonFile, []byte(newContents), 0)
-		if err != nil {
-			return fmt.Errorf("failed to update browsers.json: %v", err)
-		}
 	} else {
 		driverVersion, err := c.downloadSeleniumJAR(image.Dir)
 		if err != nil {
@@ -167,29 +150,6 @@ func (c *Firefox) downloadGeckoDriver(dir string) (string, error) {
 	_, err := downloadDriver(u, geckoDriverBinary, dir)
 	if err != nil {
 		return "", fmt.Errorf("download geckodriver: %v", err)
-	}
-	return version, nil
-}
-
-func (c *Firefox) downloadSelenoid(dir string) (string, error) {
-	version := c.SelenoidVersion
-	if version == LatestVersion {
-		v, err := latestGithubRelease("aerokube/selenoid")
-		if err != nil {
-			return "", fmt.Errorf("latest Selenoid version: %v", err)
-		}
-		version = v
-	}
-
-	u := fmt.Sprintf("https://github.com/aerokube/selenoid/releases/download/%s/selenoid_linux_amd64", version)
-	data, err := downloadFile(u)
-	if err != nil {
-		return "", fmt.Errorf("download Selenoid: %v", err)
-	}
-	outputPath := filepath.Join(dir, "selenoid")
-	err = os.WriteFile(outputPath, data, 0755)
-	if err != nil {
-		return "", fmt.Errorf("save Selenoid: %v", err)
 	}
 	return version, nil
 }
