@@ -35,6 +35,8 @@ clean() {
   if [ -n "$PULSE_PID" ]; then
     kill -TERM "$PULSE_PID"
   fi
+  pkill -9 -f firefox || true
+  kill -9 -1 || true
 }
 
 trap clean SIGINT SIGTERM
