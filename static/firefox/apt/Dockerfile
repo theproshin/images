@@ -24,6 +24,8 @@ RUN mkdir -p /usr/lib/$PACKAGE/defaults/pref && \
 'pref("app.normandy.enabled", false);' \
 'pref("app.normandy.api_url", "");' \
 'pref("app.normandy.first_run", false);' \
+'pref("app.shield.optoutstudies.enabled", false);' \
+'pref("app.shield.optoutstudies.enabled", false);' \
 '' \
 'pref("services.settings.server", "");' \
 'pref("services.settings.poll_interval", 0);' \
@@ -37,5 +39,6 @@ RUN mkdir -p /usr/lib/$PACKAGE/defaults/pref && \
 'pref("browser.translations.enable", false);' \
 '' \
 'pref("datareporting.healthreport.uploadEnabled", false);' \
+'pref("datareporting.policy.dataSubmissionEnabled", false);' \
 'pref("toolkit.telemetry.enabled", false);' \
 > /usr/lib/$PACKAGE/defaults/pref/disable-nimbus.js
