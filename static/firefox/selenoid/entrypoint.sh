@@ -64,7 +64,7 @@ if [ "$ENABLE_VNC" == "true" ]; then
     X11VNC_PID=$!
 fi
 
-DISPLAY="$DISPLAY" /usr/bin/geckodriver --host 0.0.0.0 --port=4444 --allow-hosts "*"  --allow-origins "*" ${DRIVER_ARGS} &
+DISPLAY="$DISPLAY" /usr/bin/geckodriver --host 0.0.0.0 --port=4444 --allow-hosts "$HOSTNAME,localhost,127.0.0.1,0.0.0.0" ${DRIVER_ARGS} &
 DRIVER_PID=$!
 
 wait
