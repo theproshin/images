@@ -64,7 +64,7 @@ if [ "$ENABLE_VNC" == "true" ]; then
     X11VNC_PID=$!
 fi
 
-DISPLAY="$DISPLAY" /usr/bin/geckodriver --port=4444 --allowed-ips='' --allowed-origins='*' ${DRIVER_ARGS} &
+DISPLAY="$DISPLAY" /usr/bin/geckodriver --port=4444 ${DRIVER_ARGS} &
 DRIVER_PID=$!
 
 wait
