@@ -39,7 +39,7 @@ clean() {
   kill -9 -1 || true
 }
 
-trap clean SIGINT SIGTERM
+trap clean EXIT SIGINT SIGTERM
 
 /usr/bin/fileserver &
 FILESERVER_PID=$!
