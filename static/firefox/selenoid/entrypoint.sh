@@ -39,7 +39,7 @@ clean() {
   kill -9 -1 || true
 }
 
-trap clean EXIT SIGINT SIGTERM
+trap clean SIGINT SIGTERM
 
 /usr/bin/fileserver &
 FILESERVER_PID=$!
@@ -76,4 +76,5 @@ fi
 DISPLAY="$DISPLAY" /usr/bin/geckodriver --host 0.0.0.0 --port=4444 --allow-hosts "$HOSTNAME" localhost 127.0.0.1 0.0.0.0 ${DRIVER_ARGS} &
 DRIVER_PID=$!
 
-wait
+wait -n $DRIVER_PID
+clean
