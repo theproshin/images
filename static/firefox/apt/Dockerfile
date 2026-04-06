@@ -18,3 +18,11 @@ RUN  \
         ( [ "$PACKAGE" != "firefox" ] && ln /usr/bin/$PACKAGE /usr/bin/firefox ) || true && \
         firefox --version && \
         rm -Rf /tmp/* && rm -Rf /var/lib/apt/lists/*
+
+RUN mkdir -p /usr/lib/firefox/distribution
+
+COPY policies.json /usr/lib/firefox/distribution/policies.json
+
+ENV XDG_RUNTIME_DIR=/tmp/runtime-firefox
+
+RUN mkdir -p /tmp/runtime-firefox && chmod 777 /tmp/runtime-firefox
