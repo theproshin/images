@@ -25,7 +25,7 @@ clean() {
     kill -9 "$X11VNC_PID"
   fi
   if [ -n "$DRIVER_PID" ]; then
-    kill -TERM "$DRIVER_PID" 2>/dev/null || true
+    kill -TERM "$DRIVER_PID"
   fi
 }
 
