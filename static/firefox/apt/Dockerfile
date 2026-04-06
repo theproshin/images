@@ -20,17 +20,22 @@ RUN  \
         rm -Rf /tmp/* && rm -Rf /var/lib/apt/lists/*
 
 RUN mkdir -p /usr/lib/$PACKAGE/defaults/pref && \
-echo -e '\
-pref("app.normandy.enabled", false);\n\
-pref("app.normandy.api_url", "");\n\
-pref("app.normandy.first_run", false);\n\
-pref("services.settings.server", "");\n\
-pref("services.settings.poll_interval", 0);\n\
-pref("browser.region.network.url", "");\n\
-pref("browser.region.update.enabled", false);\n\
-pref("browser.newtabpage.activity-stream.feeds.topsites", false);\n\
-pref("browser.newtabpage.activity-stream.feeds.section.topstories", false);\n\
-pref("browser.translations.enable", false);\n\
-pref("datareporting.healthreport.uploadEnabled", false);\n\
-pref("toolkit.telemetry.enabled", false);\
-' > /usr/lib/$PACKAGE/defaults/pref/disable-nimbus.js
+    printf '%s\n' \
+'pref("app.normandy.enabled", false);' \
+'pref("app.normandy.api_url", "");' \
+'pref("app.normandy.first_run", false);' \
+'' \
+'pref("services.settings.server", "");' \
+'pref("services.settings.poll_interval", 0);' \
+'' \
+'pref("browser.region.network.url", "");' \
+'pref("browser.region.update.enabled", false);' \
+'' \
+'pref("browser.newtabpage.activity-stream.feeds.topsites", false);' \
+'pref("browser.newtabpage.activity-stream.feeds.section.topstories", false);' \
+'' \
+'pref("browser.translations.enable", false);' \
+'' \
+'pref("datareporting.healthreport.uploadEnabled", false);' \
+'pref("toolkit.telemetry.enabled", false);' \
+> /usr/lib/$PACKAGE/defaults/pref/disable-nimbus.js
