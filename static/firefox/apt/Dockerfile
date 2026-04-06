@@ -6,6 +6,22 @@ ARG PPA
 
 LABEL browser=$PACKAGE:$VERSION
 
+RUN mkdir -p /usr/lib/firefox/defaults/pref && \
+echo -e '\
+pref("app.normandy.enabled", false);\n\
+pref("app.normandy.api_url", "");\n\
+pref("app.normandy.first_run", false);\n\
+pref("services.settings.server", "");\n\
+pref("services.settings.poll_interval", 0);\n\
+pref("browser.region.network.url", "");\n\
+pref("browser.region.update.enabled", false);\n\
+pref("browser.newtabpage.activity-stream.feeds.topsites", false);\n\
+pref("browser.newtabpage.activity-stream.feeds.section.topstories", false);\n\
+pref("browser.translations.enable", false);\n\
+pref("datareporting.healthreport.uploadEnabled", false);\n\
+pref("toolkit.telemetry.enabled", false);\
+' > /usr/lib/firefox/defaults/pref/disable-nimbus.js
+
 RUN  \
         ( [ "$PPA" != "" ] && \
             apt-get update && \
