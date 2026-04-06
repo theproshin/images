@@ -11,25 +11,26 @@ fi
 
 clean() {
   if [ -n "$FILESERVER_PID" ]; then
-    kill -9 "$FILESERVER_PID"
+    kill -TERM "$FILESERVER_PID"
   fi
   if [ -n "$XSELD_PID" ]; then
-    kill -9 "$XSELD_PID"
-  if [ -n "$PULSE_PID" ]; then
-    kill -9 "$PULSE_PID"
+    kill -TERM "$XSELD_PID"
   fi
   if [ -n "$XVFB_PID" ]; then
-    kill -9 "$XVFB_PID"
-  fi
-  if [ -n "$X11VNC_PID" ]; then
-    kill -9 "$X11VNC_PID"
+    kill -TERM "$XVFB_PID"
   fi
   if [ -n "$DRIVER_PID" ]; then
     kill -TERM "$DRIVER_PID"
   fi
+  if [ -n "$X11VNC_PID" ]; then
+    kill -TERM "$X11VNC_PID"
+  fi
+  if [ -n "$PULSE_PID" ]; then
+    kill -TERM "$PULSE_PID"
+  fi
 }
 
-trap clean EXIT SIGINT SIGTERM
+trap clean SIGINT SIGTERM
 
 /usr/bin/fileserver &
 FILESERVER_PID=$!
