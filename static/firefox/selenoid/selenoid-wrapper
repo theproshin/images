@@ -9,7 +9,12 @@ set -o pipefail
       (
         echo "[geckodriver-cleanup] killing hanging firefox"
 
-        pkill -TERM -f 'firefox -contentproc' 2>/dev/null || true
+        FIREFOX_PID=$(pgrep -f 'firefox --marionette' | head -n1)
+
+        if [ -n "$FIREFOX_PID" ]; then
+          echo "[firefox-cleanup] sending SIGTERM to firefox parent $FIREFOX_PID" >&2
+          kill -TERM "$FIREFOX_PID" 2>/dev/null || true
+        fi
       ) &
       ;;
   esac
