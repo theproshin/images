@@ -6,6 +6,7 @@ COPY selenoid /usr/bin/
 COPY --chown=selenium:root browsers.json /home/selenium/
 COPY entrypoint.sh /
 COPY fonts/* /usr/share/fonts/truetype/
+COPY policies.json /usr/lib/firefox/distribution/policies.json
 
 RUN echo "cookie-file = ~/.config/pulse/cookie" >> /etc/pulse/client.conf
 
