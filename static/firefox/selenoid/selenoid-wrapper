@@ -7,10 +7,9 @@ set -o pipefail
   case "$line" in
     *"[SESSION_DELETED]"*)
       (
-        echo "[geckodriver-cleanup] killing hanging geckodriver"
+        echo "[geckodriver-cleanup] killing hanging firefox"
 
-        pkill -TERM -f '^/usr/bin/geckodriver --port=' 2>/dev/null || true
-        pkill -KILL -f '^/usr/bin/geckodriver --port=' 2>/dev/null || true
+        pkill -TERM -f 'firefox -contentproc' 2>/dev/null || true
       ) &
       ;;
   esac
