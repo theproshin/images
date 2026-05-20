@@ -65,7 +65,7 @@ if [ "$ENABLE_VNC" == "true" ]; then
     X11VNC_PID=$!
 fi
 
-DISPLAY="$DISPLAY" /usr/bin/selenoid -conf /tmp/browsers.json -disable-docker -timeout 1h -max-timeout 24h -enable-file-upload -capture-driver-logs &
+DISPLAY="$DISPLAY" /usr/bin/selenoid-wrapper -conf /tmp/browsers.json -disable-docker -timeout 1h -max-timeout 24h -enable-file-upload -capture-driver-logs &
 SELENOID_PID=$!
 
 if env | grep -q ROOT_CA_; then

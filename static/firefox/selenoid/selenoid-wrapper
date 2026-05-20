@@ -1,0 +1,17 @@
+#!/bin/bash
+set -o pipefail
+
+/usr/bin/selenoid "$@" 2>&1 | while IFS= read -r line; do
+  echo "$line"
+
+  case "$line" in
+    *"[SESSION_DELETED]"*)
+      echo "[firefox-cleanup] session deleted, killing firefox"
+
+      pkill -TERM -f '^/usr/lib/firefox/firefox' 2>/dev/null || true
+      pkill -KILL -f '^/usr/lib/firefox/firefox' 2>/dev/null || true
+      ;;
+  esac
+done
+
+exit ${PIPESTATUS[0]}
