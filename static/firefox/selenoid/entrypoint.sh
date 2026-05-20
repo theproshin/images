@@ -65,7 +65,22 @@ if [ "$ENABLE_VNC" == "true" ]; then
     X11VNC_PID=$!
 fi
 
-DISPLAY="$DISPLAY" /usr/bin/selenoid-wrapper -conf /tmp/browsers.json -disable-docker -timeout 1h -max-timeout 24h -enable-file-upload -capture-driver-logs &
+(
+  while true; do
+    PROFILE=$(find /tmp -maxdepth 1 -type d -name 'rust_mozprofile*' | head -n1)
+
+    if [ -n "$PROFILE" ]; then
+      if [ ! -f "$PROFILE/user.js" ]; then
+        echo "[firefox-profile] injecting user.js into $PROFILE"
+        cp /opt/firefox-user.js "$PROFILE/user.js"
+      fi
+    fi
+
+    sleep 0.2
+  done
+) &
+
+DISPLAY="$DISPLAY" /usr/bin/selenoid -conf /tmp/browsers.json -disable-docker -timeout 1h -max-timeout 24h -enable-file-upload -capture-driver-logs &
 SELENOID_PID=$!
 
 if env | grep -q ROOT_CA_; then
