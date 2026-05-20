@@ -5,8 +5,11 @@ COPY geckodriver /usr/bin/
 COPY selenoid /usr/bin/
 COPY --chown=selenium:root browsers.json /home/selenium/
 COPY entrypoint.sh /
+
+COPY mozilla.cfg /usr/lib/firefox/mozilla.cfg
+COPY autoconfig.js /usr/lib/firefox/defaults/pref/autoconfig.js
+
 COPY fonts/* /usr/share/fonts/truetype/
-COPY policies.json /usr/lib/firefox/distribution/policies.json
 
 RUN echo "cookie-file = ~/.config/pulse/cookie" >> /etc/pulse/client.conf
 
