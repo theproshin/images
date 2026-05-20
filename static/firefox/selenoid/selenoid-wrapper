@@ -6,10 +6,14 @@ set -o pipefail
 
   case "$line" in
     *"Stopped listening on port"*)
-      echo "[firefox-cleanup] marionette stopped, killing firefox"
+      (
+        sleep 0.5
 
-      pkill -TERM -f '^/usr/lib/firefox/firefox' 2>/dev/null || true
-      pkill -KILL -f '^/usr/lib/firefox/firefox' 2>/dev/null || true
+        echo "[firefox-cleanup] killing firefox"
+
+        pkill -TERM -f '^/usr/lib/firefox/firefox' 2>/dev/null || true
+        pkill -KILL -f '^/usr/lib/firefox/firefox' 2>/dev/null || true
+      ) &
       ;;
   esac
 done
