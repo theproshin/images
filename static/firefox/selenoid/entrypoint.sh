@@ -68,42 +68,30 @@ if [ "$ENABLE_VNC" == "true" ]; then
     X11VNC_PID=$!
 fi
 
-cleanup_firefox_sessions() {
+cleanup_stale_firefox() {
   while true; do
-    for gpid in $(pgrep -f "/usr/bin/geckodriver --port"); do
 
-      # если geckodriver больше не имеет дочернего firefox
-      if ! pgrep -P "$gpid" firefox >/dev/null 2>&1; then
-        continue
+    # если geckodriver есть, но webdriver session уже отсутствует
+    if pgrep -f "/usr/bin/geckodriver --port" >/dev/null; then
+
+      # активных websocket/marionette соединений уже нет
+      if ! ss -tanp 2>/dev/null | grep geckodriver | grep ESTAB >/dev/null; then
+
+        echo "[firefox-cleanup] killing stale firefox processes"
+
+        pkill -TERM -f "/usr/lib/firefox/firefox" || true
+        pkill -TERM -f "rust_mozprofile" || true
+
+        # дочищаем geckodriver
+        pkill -TERM -f "/usr/bin/geckodriver --port" || true
       fi
+    fi
 
-      # проверяем активность TCP порта webdriver
-      port=$(ps -p "$gpid" -o args= | sed -n 's/.*--port=\([0-9]*\).*/\1/p')
-
-      if [ -n "$port" ]; then
-        if ! ss -ltn "( sport = :$port )" | grep -q LISTEN; then
-
-          echo "[firefox-cleanup] geckodriver $gpid is stale, killing firefox tree"
-
-          # убиваем firefox children
-          pkill -TERM -P "$gpid" firefox || true
-
-          # fallback: убить весь subtree
-          for child in $(pgrep -P "$gpid"); do
-            kill -TERM "$child" 2>/dev/null || true
-          done
-
-          kill -TERM "$gpid" 2>/dev/null || true
-        fi
-      fi
-    done
-
-    # ожидание события через read timeout вместо sleep
     read -t 1 _ || true
   done
 }
 
-cleanup_firefox_sessions &
+cleanup_stale_firefox &
 FIREFOX_CLEANER_PID=$!
 
 DISPLAY="$DISPLAY" /usr/bin/selenoid -conf /tmp/browsers.json -disable-docker -timeout 1h -max-timeout 24h -enable-file-upload -capture-driver-logs &
