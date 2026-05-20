@@ -31,9 +31,6 @@ clean() {
   if [ -n "$X11VNC_PID" ]; then
     kill -TERM "$X11VNC_PID"
   fi
-  if [ -n "$FIREFOX_CLEANER_PID" ]; then
-    kill -TERM "$FIREFOX_CLEANER_PID"
-  fi
 }
 
 trap clean SIGINT SIGTERM
@@ -67,32 +64,6 @@ if [ "$ENABLE_VNC" == "true" ]; then
     x11vnc -display "$DISPLAY" -passwd selenoid -shared -forever -loop500 -rfbport 5900 -rfbportv6 5900 -logfile /dev/null &
     X11VNC_PID=$!
 fi
-
-cleanup_stale_firefox() {
-  while true; do
-
-    # если geckodriver есть, но webdriver session уже отсутствует
-    if pgrep -f "/usr/bin/geckodriver --port" >/dev/null; then
-
-      # активных websocket/marionette соединений уже нет
-      if ! ss -tanp 2>/dev/null | grep geckodriver | grep ESTAB >/dev/null; then
-
-        echo "[firefox-cleanup] killing stale firefox processes"
-
-        pkill -TERM -f "/usr/lib/firefox/firefox" || true
-        pkill -TERM -f "rust_mozprofile" || true
-
-        # дочищаем geckodriver
-        pkill -TERM -f "/usr/bin/geckodriver --port" || true
-      fi
-    fi
-
-    read -t 1 _ || true
-  done
-}
-
-cleanup_stale_firefox &
-FIREFOX_CLEANER_PID=$!
 
 DISPLAY="$DISPLAY" /usr/bin/selenoid -conf /tmp/browsers.json -disable-docker -timeout 1h -max-timeout 24h -enable-file-upload -capture-driver-logs &
 SELENOID_PID=$!
