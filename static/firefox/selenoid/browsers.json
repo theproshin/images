@@ -3,7 +3,7 @@
     "default": "@@VERSION@@",
     "versions": {
       "@@VERSION@@": {
-        "image": ["/usr/bin/geckodriver-wrapper"@@DRIVER_ARGS@@]
+        "image": ["/usr/bin/geckodriver"@@DRIVER_ARGS@@]
       }
     }
   }
