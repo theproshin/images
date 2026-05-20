@@ -5,7 +5,7 @@ set -o pipefail
   echo "$line"
 
   case "$line" in
-    *"Marionette      INFO    Stopped listening on port"*)
+    *"Stopped listening on port"*)
       echo "[firefox-cleanup] marionette stopped, killing firefox"
 
       pkill -TERM -f '^/usr/lib/firefox/firefox' 2>/dev/null || true
